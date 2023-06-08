@@ -32,12 +32,14 @@ const Home = () => {
     {
       name: "Dr. Code",
       sortable: true,
+      filterable: true,
       maxWidth: "100px",
       selector: (row) => row.doctor_code,
     },
     {
       name: "Doctor Name",
       sortable: true,
+      filterable: true,
       selector: (row) => row.doctor_name,
       cell: (state) => {
         return InputComponent("doctor_name", state);
@@ -46,6 +48,7 @@ const Home = () => {
     {
       name: "Speciality",
       sortable: true,
+      filterable: true,
       selector: (row) => row.speciality,
       cell: (state) => {
         return InputComponent("speciality", state);
@@ -54,6 +57,7 @@ const Home = () => {
     {
       name: "City/Region",
       sortable: true,
+      filterable: true,
       selector: (state) => state.city_region,
       cell: (state) => {
         return InputComponent("city_region", state);
@@ -63,14 +67,26 @@ const Home = () => {
       name: "State",
       selector: (state) => state.state,
       sortable: true,
+      filterable: true,
       cell: (state) => {
         return InputComponent("state", state);
       },
     },
     {
+      name: "Hq",
+      selector: (state) => state.hq,
+      sortable: true,
+      filterable: true,
+      cell: (state) => {
+        return InputComponent("hq", state);
+      },
+      contextComponent: () => "asd",
+    },
+    {
       name: "Train No.",
       selector: (state) => state.train_number,
       sortable: true,
+      filterable: true,
       cell: (state) => {
         return InputComponent("train_number", state);
       },
@@ -79,6 +95,7 @@ const Home = () => {
       name: "Publish Date",
       selector: (state) => state.train_date,
       sortable: true,
+      filterable: true,
       cell: (state) => {
         return InputComponent("train_date", state);
       },
