@@ -42,7 +42,9 @@ const Login = () => {
             className="form-control"
             id="email"
             value={userInfo.email}
-            onChange={(e)=>setUserInfo({...userInfo, email:e.target.value})}
+            onChange={(e) =>
+              setUserInfo({ ...userInfo, email: e.target.value })
+            }
           />
         </div>
         <div className="form-group">
@@ -55,10 +57,14 @@ const Login = () => {
             className="form-control"
             id="password"
             value={userInfo.password}
-            onChange={(e)=>setUserInfo({...userInfo, password:e.target.value})}
+            onChange={(e) =>
+              setUserInfo({ ...userInfo, password: e.target.value })
+            }
           />
         </div>
-        <button className="btn" type="submit">Login</button>
+        <button className="btn" type="submit">
+          Login
+        </button>
       </form>
     </div>
   );

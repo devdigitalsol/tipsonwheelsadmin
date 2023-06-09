@@ -1,4 +1,4 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, NavLink, Outlet } from "react-router-dom";
 import LOGOIRCTC from "./../assets/images/logo_irctc.png";
 import LOGODRL from "./../assets/images/logo_drl.png";
 import Loader from "./Loader";
@@ -31,9 +31,28 @@ const Layout = () => {
         </div>
       </div>
       {user && (
-        <div className="py-2 px-4 bg-white/60 text-sm">
-          Logged in as {user.email}
-        </div>
+        <nav className="px-4 bg-white/60 text-sm flex gap-2 items-center shadow navbar">
+          {user?.role === "master" && (
+            <>
+              <NavLink to="/" end>
+                Home
+              </NavLink>
+              <NavLink to="/add-tm">Add New TM</NavLink>
+              <NavLink to="/bulk-download">Bulk Download</NavLink>
+            </>
+          )}
+          {user?.role === "verifier" && (
+            <>
+              <NavLink to="/" end>
+                Home
+              </NavLink>
+              <NavLink to="/verify-doctors">Verify Doctors</NavLink>
+            </>
+          )}
+          <div className="text-slate-600">
+            Logged in as <b>{user.email}</b>
+          </div>
+        </nav>
       )}
       <div className="p-4">
         <Outlet />

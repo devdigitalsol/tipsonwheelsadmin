@@ -73,6 +73,27 @@ export const AppState = ({ children }) => {
       console.log(error);
     }
   };
+
+  const createTm = async (tmInfo) => {
+    setIsLoading(true);
+    try {
+      const resp = await apiService.post("", {
+        ...tmInfo,
+        operation: "create_tm",
+      });
+      if (resp?.data?.status === 200) {
+        toast.success("TM created successfully");
+      }
+      if (resp?.data?.status === 404) {
+        toast.error(resp?.data?.message);
+      }
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      toast.error(error.message);
+      console.log(error);
+    }
+  };
   const store = {
     user,
     setUser,
@@ -82,6 +103,7 @@ export const AppState = ({ children }) => {
     fetchDoctors,
     doctors,
     setDoctors,
+    createTm,
   };
   return <AppContext.Provider value={store}>{children}</AppContext.Provider>;
 };
