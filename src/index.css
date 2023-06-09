@@ -30,14 +30,14 @@
     @apply rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-lg hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-indigo-600/50 disabled:shadow-none;
   }
   .input-table {
-    @apply bg-white px-2 py-1 ring-1 ring-inset ring-gray-300 w-full rounded-md;
+    @apply bg-white px-2 py-1 ring-1 ring-inset ring-gray-300 w-full rounded-md text-sm;
   }
 }
 .rdt_TableCell {
   @apply py-1.5;
 }
 .rdt_TableCol div {
-  @apply w-full;
+  @apply w-full self-start;
 }
 .rdt_TableCol input {
   @apply bg-white px-2 py-1 ring-1 ring-inset ring-gray-300 w-full rounded-md;

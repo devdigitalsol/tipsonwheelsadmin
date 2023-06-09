@@ -22,7 +22,10 @@ const Home = () => {
   const [data, setData] = useState([]);
   useEffect(() => {
     if (doctors?.length > 0) {
-      setData(doctors);
+      const docs = doctors.map((item, index) => {
+        return { ...item, sr: index + 1 };
+      });
+      setData(docs);
     }
   }, [doctors]);
   useEffect(() => {
@@ -30,10 +33,15 @@ const Home = () => {
   }, []);
   const columns = useCallback([
     {
+      name: "Sr.",
+      width: "50px",
+      selector: (row) => row.sr,
+    },
+    {
       name: "Dr. Code",
       sortable: true,
       filterable: true,
-      maxWidth: "100px",
+      width: "100px",
       selector: (row) => row.doctor_code,
     },
     {
@@ -84,6 +92,7 @@ const Home = () => {
     },
     {
       name: "Train No.",
+      width: "100px",
       selector: (state) => state.train_number,
       sortable: true,
       filterable: true,
@@ -94,6 +103,7 @@ const Home = () => {
     {
       name: "Publish Date",
       selector: (state) => state.train_date,
+      width: "160px",
       sortable: true,
       filterable: true,
       cell: (state) => {
@@ -101,9 +111,9 @@ const Home = () => {
       },
     },
     {
-      name: "Image",
+      name: "IMG",
       selector: (state) => state.media_path,
-      maxWidth: "60px",
+      width: "70px",
       cell: (state) => {
         return (
           <a href={state.media_path} data-fancybox>
@@ -113,7 +123,7 @@ const Home = () => {
       },
     },
     {
-      maxWidth: "250px",
+      name: "Action",
       cell: (state) => {
         return (
           <div className="flex gap-2 items-center justify-center">
