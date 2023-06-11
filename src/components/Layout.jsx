@@ -31,23 +31,23 @@ const Layout = () => {
         </div>
       </div>
       {user && (
-        <nav className="px-4 bg-white/60 text-sm flex gap-2 items-center shadow navbar">
+        <nav className="px-4 bg-white/60 text-sm flex gap-2 items-center shadow navbar justify-between">
           {user?.role === "master" && (
-            <>
+            <div className="flex gap-2">
               <NavLink to="/" end>
                 Home
               </NavLink>
               <NavLink to="/add-tm">Add New TM</NavLink>
               <NavLink to="/bulk-download">Bulk Download</NavLink>
-            </>
+            </div>
           )}
           {user?.role === "verifier" && (
-            <>
+            <div className="flex gap-2">
               <NavLink to="/" end>
                 Home
               </NavLink>
               <NavLink to="/verify-doctors">Verify Doctors</NavLink>
-            </>
+            </div>
           )}
           <div className="text-slate-600">
             Logged in as <b>{user.email}</b>

@@ -22,7 +22,6 @@ const statusArray = {
   "rejected-2": "Entered data is not appropriate",
 };
 const Verifier = () => {
-  const [alltips, setAlltips] = useState([]);
   const { doctors, fetchDoctors, user } = useContext(AppContext);
   const [data, setData] = useState([]);
   useEffect(() => {
@@ -215,9 +214,22 @@ const Verifier = () => {
         doctor_code: state.doctor_code,
       });
       if (resp?.data?.status === 200) {
-        console.log(resp?.data);
-        setAlltips(resp?.data?.tips);
-        generatePDF();
+        const newarr = [];
+        if (!newarr.length) {
+          for (const items of tipsoptions) {
+            for (const s of resp?.data?.tips) {
+              if (s.tip_id.toString() === items.id.toString()) {
+                const newItem = {
+                  ...items,
+                  text: s.tip,
+                };
+                newarr.push(newItem);
+                break;
+              }
+            }
+          }
+        }
+        console.log(newarr);
       }
     } catch (error) {
       console.log(error);
@@ -243,17 +255,8 @@ const Verifier = () => {
     //   console.log(error);
     // }
   };
-  useEffect(() => {
-    if (alltips?.length) {
-      generatePDF();
-    }
-  }, [alltips]);
 
   const generatePDF = () => {
-    const newarr = tipsoptions.filter((item) => {
-      return item.id === alltips.tip_id;
-    });
-    console.log(newarr);
     // const doc = new jsPDF({
     //   orientation: "portrait",
     //   unit: "in",
