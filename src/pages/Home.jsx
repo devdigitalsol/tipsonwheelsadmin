@@ -87,6 +87,28 @@ const Home = () => {
       sortable: true,
       filterable: true,
     },
+    {
+      name: "Verified",
+      selector: (state) => state.status,
+      width: "160px",
+      sortable: true,
+      filterable: true,
+      conditionalCellStyles: [
+        {
+          when: (state) => state.status === "pending",
+          style: { backgroundColor: "#eab308", color: "#fff" },
+        },
+        {
+          when: (state) => state.status === "approved",
+          style: { backgroundColor: "#22c55e", color: "#fff" },
+        },
+        {
+          when: (state) =>
+            state.status === "rejected-1" || state.status === "rejected-2",
+          style: { backgroundColor: "#ef4444", color: "#fff" },
+        },
+      ],
+    },
   ]);
 
   return (

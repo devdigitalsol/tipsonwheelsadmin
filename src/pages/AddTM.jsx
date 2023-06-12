@@ -3,7 +3,7 @@ import { AppContext } from "../context";
 
 const AddTM = () => {
   const tmFormRef = useRef();
-  const { createTm } = useContext(AppContext);
+  const { createTm, allHq } = useContext(AppContext);
   const [tmInfo, setTmInfo] = useState({
     tm_id: "",
     tm_name: "",
@@ -105,12 +105,26 @@ const AddTM = () => {
         <label htmlFor="hq" className="form-label">
           Headquarter
         </label>
-        <input
-          type="text"
-          id="hq"
-          className="form-control"
-          onChange={(e) => setTmInfo({ ...tmInfo, hq: e.target.value })}
-        />
+
+        {allHq?.length > 0 && (
+          <select
+            name="hq"
+            id="hq"
+            onChange={(e) => setTmInfo({ ...tmInfo, hq: e.target.value })}
+            className="form-control"
+          >
+            <option value="" defaultValue>
+              Select
+            </option>
+            {allHq.map((item, i) => {
+              return (
+                <option value={i} key={i}>
+                  {item}
+                </option>
+              );
+            })}
+          </select>
+        )}
       </div>
       <button disabled={!canSave} type="submit" className="btn">
         Submit

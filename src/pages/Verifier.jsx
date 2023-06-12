@@ -187,17 +187,19 @@ const Verifier = () => {
     );
   };
 
-  const saveData = async (state) => {
+  const saveData = async (state, changedStatus, pdf_path) => {
     try {
       const resp = await apiService.post("", {
         ...state,
         operation: "verify_tips",
         verifier_email: user?.email,
+        status: changedStatus || state.status,
+        pdf_path: pdf_path || state.pdf_path,
       });
       if (resp?.data?.status === 200) {
         const updatedData = data.map((item) => {
           return item.doctor_code === state.doctor_code
-            ? resp?.data?.doctor
+            ? { ...resp?.data?.doctor, sr: state.sr }
             : item;
         });
         setData(updatedData);
@@ -207,7 +209,7 @@ const Verifier = () => {
       console.log(error);
     }
   };
-  const changeStatus = async (e, state) => {
+  const changeStatus = async (changedStatus, state) => {
     try {
       const resp = await apiService.post("", {
         operation: "get_doctor_tips",
@@ -229,9 +231,11 @@ const Verifier = () => {
             }
           }
         }
-        console.log(newarr);
+        generatePDF(newarr, state, changedStatus);
+        // console.log(newarr);
       }
     } catch (error) {
+      toast.error(error.message);
       console.log(error);
     }
 
@@ -256,49 +260,64 @@ const Verifier = () => {
     // }
   };
 
-  const generatePDF = () => {
-    // const doc = new jsPDF({
-    //   orientation: "portrait",
-    //   unit: "in",
-    //   format: "a3",
-    // });
-    // doc.addImage(PDFBG, "png", 0, 0, 11.7, 16.5);
-    // tips.map((tip, i) => {
-    //   doc.setFont("helvetica", "", "normal");
-    //   doc.setFontSize(26);
-    //   doc.setTextColor(40, 40, 40);
-    //   doc.addImage(tip.icon, "png", 1.3, 1.53 * i + 3.8, 1, 1);
-    //   doc.text(tip.text, 2.8, 1.52 * i + 4.2, { maxWidth: 7.5 });
-    // });
-    // doc.setFontSize(40);
-    // doc.setFont("helvetica", "", "bold");
-    // doc.setTextColor(255, 255, 255);
-    // doc.text(docInfo?.doctor_name, doc.internal.pageSize.getWidth() / 2, 12.5, {
-    //   align: "center",
-    // });
-    // doc.setFontSize(30);
-    // doc.setFont("helvetica", "", "bold");
-    // doc.text(docInfo?.speciality, doc.internal.pageSize.getWidth() / 2, 13, {
-    //   align: "center",
-    // });
-    // doc.setFontSize(30);
-    // doc.setFont("helvetica", "", "normal");
-    // doc.text(
-    //   `${docInfo?.city_region}, ${docInfo?.state}`,
-    //   doc.internal.pageSize.getWidth() / 2,
-    //   13.5,
-    //   {
-    //     align: "center",
-    //   }
-    // );
-    // let pdfName = slugify(
-    //   `${docInfo?.doctor_code}-${
-    //     docInfo?.doctor_name
-    //   }-${new Date().getDate()}-${
-    //     new Date().getMonth() + 1
-    //   }-${new Date().getFullYear()}`
-    // );
-    // doc.save(`${pdfName}.pdf`);
+  const generatePDF = async (tips, state, changedStatus) => {
+    const doc = new jsPDF({
+      orientation: "portrait",
+      unit: "in",
+      format: "a3",
+    });
+    doc.addImage(PDFBG, "png", 0, 0, 11.7, 16.5);
+    tips.map((tip, i) => {
+      doc.setFont("helvetica", "", "normal");
+      doc.setFontSize(26);
+      doc.setTextColor(40, 40, 40);
+      doc.addImage(tip.icon, "png", 1.3, 1.53 * i + 3.8, 1, 1);
+      doc.text(tip.text, 2.8, 1.52 * i + 4.2, { maxWidth: 7.5 });
+    });
+    doc.setFontSize(40);
+    doc.setFont("helvetica", "", "bold");
+    doc.setTextColor(255, 255, 255);
+    doc.text(state?.doctor_name, doc.internal.pageSize.getWidth() / 2, 12.5, {
+      align: "center",
+    });
+    doc.setFontSize(30);
+    doc.setFont("helvetica", "", "bold");
+    doc.text(state?.speciality, doc.internal.pageSize.getWidth() / 2, 13, {
+      align: "center",
+    });
+    doc.setFontSize(30);
+    doc.setFont("helvetica", "", "normal");
+    doc.text(
+      `${state?.city_region}, ${state?.state}`,
+      doc.internal.pageSize.getWidth() / 2,
+      13.5,
+      {
+        align: "center",
+      }
+    );
+    const config = {
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+        Accept: "application/json, */*",
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    try {
+      let formData = new FormData();
+      formData.append(
+        "upload_file",
+        doc.output("blob"),
+        slugify(`${state.hq}_${state.doctor_code}.pdf`)
+      );
+      formData.append("suffix", slugify(`${state.hq}_${state.doctor_code}`));
+      const resp = await apiService.post("/file_upload.php", formData, config);
+      if (resp?.data?.status === 200) {
+        saveData(state, changedStatus, resp?.data?.filename);
+      }
+    } catch (error) {
+      toast.error(error.message);
+      console.log(error);
+    }
   };
 
   return (

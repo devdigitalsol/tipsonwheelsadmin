@@ -7,6 +7,7 @@ export const AppContext = createContext();
 export const AppState = ({ children }) => {
   const info = JSON.parse(localStorage.getItem("admin"));
   const [user, setUser] = useState(info || null);
+  const [allHq, setAllHq] = useState([]);
   const [isLoading, setIsLoading] = useState(null);
   const [doctors, setDoctors] = useState([]);
   useEffect(() => {
@@ -29,7 +30,6 @@ export const AppState = ({ children }) => {
         return false;
       }
       if (resp?.data?.status === 200) {
-        console.log(resp?.data);
         if (resp?.data?.role === "master") {
           localStorage.setItem(
             "admin",
@@ -74,6 +74,27 @@ export const AppState = ({ children }) => {
     }
   };
 
+  const fetchHqs = async () => {
+    setIsLoading(true);
+    try {
+      const resp = await apiService.post("", {
+        operation: "get_headquarters",
+      });
+      if (resp?.data?.status === 200) {
+        setAllHq(resp?.data?.hqs);
+      }
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      toast.error(error.message);
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    if (user) {
+      fetchHqs();
+    }
+  }, [user]);
   const createTm = async (tmInfo) => {
     setIsLoading(true);
     try {
@@ -104,6 +125,7 @@ export const AppState = ({ children }) => {
     doctors,
     setDoctors,
     createTm,
+    allHq,
   };
   return <AppContext.Provider value={store}>{children}</AppContext.Provider>;
 };
