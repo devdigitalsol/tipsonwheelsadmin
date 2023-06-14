@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import DataTable from "react-data-table-component-with-filter";
 import { AppContext } from "../context";
 import Fancybox from "../components/Fancybox";
@@ -21,6 +15,9 @@ const statusArray = {
   "rejected-1": "Image is not appropriate",
   "rejected-2": "Entered data is not appropriate",
 };
+const today = new Date();
+const tomorrow = new Date(today);
+tomorrow.setDate(tomorrow.getDate() + 1);
 const Verifier = () => {
   const { doctors, fetchDoctors, user } = useContext(AppContext);
   const [data, setData] = useState([]);
@@ -92,7 +89,6 @@ const Verifier = () => {
       cell: (state) => {
         return InputComponent("hq", state);
       },
-      contextComponent: () => "asd",
     },
     {
       name: "Train No.",
@@ -105,7 +101,7 @@ const Verifier = () => {
       },
     },
     {
-      name: "Publish Date",
+      name: "Date Of Distribution",
       selector: (state) => state.train_date,
       width: "160px",
       sortable: true,
@@ -159,6 +155,7 @@ const Verifier = () => {
       },
     },
   ]);
+
   const InputComponent = (name, state) => {
     const handleChange = (e, doctor_code) => {
       const { name, value } = e.target;
@@ -188,6 +185,16 @@ const Verifier = () => {
   };
 
   const saveData = async (state, changedStatus, pdf_path) => {
+    if (
+      !state.doctor_code.trim().length ||
+      !state.speciality.trim().length ||
+      !state.city_region.trim().length ||
+      !state.state.trim().length ||
+      !state.hq.trim().length
+    ) {
+      toast.error("Please enter all the required fileds");
+      return false;
+    }
     try {
       const resp = await apiService.post("", {
         ...state,
@@ -209,13 +216,28 @@ const Verifier = () => {
       console.log(error);
     }
   };
+
   const changeStatus = async (changedStatus, state) => {
+    const canchange = [
+      state.doctor_code.trim().length,
+      state.speciality.trim().length,
+      state.city_region.trim().length,
+      state.state.trim().length,
+      state.hq.trim().length,
+      state.train_date.trim().length,
+      state.train_number.trim().length,
+    ].every(Boolean);
+    if (!canchange && changedStatus === "approved") {
+      toast.error("Please enter all the required fileds");
+      return false;
+    }
     try {
       const resp = await apiService.post("", {
         operation: "get_doctor_tips",
         doctor_code: state.doctor_code,
       });
       if (resp?.data?.status === 200) {
+        toast.success("Status changed successfully");
         const newarr = [];
         if (!newarr.length) {
           for (const items of tipsoptions) {
@@ -232,32 +254,11 @@ const Verifier = () => {
           }
         }
         generatePDF(newarr, state, changedStatus);
-        // console.log(newarr);
       }
     } catch (error) {
       toast.error(error.message);
       console.log(error);
     }
-
-    // try {
-    //   const resp = await apiService.post("", {
-    //     ...state,
-    //     operation: "verify_tips",
-    //     status: e,
-    //     verifier_email: user?.email,
-    //   });
-    //   if (resp?.data?.status === 200) {
-    //     const updatedData = data.map((item) => {
-    //       return item.doctor_code === state.doctor_code
-    //         ? resp?.data?.doctor
-    //         : item;
-    //     });
-    //     setData(updatedData);
-    //   }
-    // } catch (error) {
-    //   toast.error(error.message);
-    //   console.log(error);
-    // }
   };
 
   const generatePDF = async (tips, state, changedStatus) => {
@@ -346,10 +347,11 @@ export const DateInput = ({ name, state, handleChange }) => {
       value={
         state[name]
           ? moment(newstr).format("YYYY-MM-DD")
-          : moment(new Date()).format("YYYY-MM-DD")
+          : moment(tomorrow).format("YYYY-MM-DD")
       }
       disabled={state.status === "approved"}
       onChange={(e) => handleChange(e, state.doctor_code)}
+      min={tomorrow.toISOString().split("T")[0]}
     />
   );
 };

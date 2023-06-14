@@ -3,9 +3,8 @@ import DataTable from "react-data-table-component-with-filter";
 import { AppContext } from "../context";
 import moment from "moment";
 import * as XLSX from "xlsx";
-import { apiService } from "../services";
 
-const Master = () => {
+const Admin = () => {
   const { doctors, fetchDoctors, user } = useContext(AppContext);
   const [data, setData] = useState([]);
   useEffect(() => {
@@ -104,23 +103,8 @@ const Master = () => {
       XLSX.writeFile(wb, `test.xlsx`);
       return false;
     };
-    const exportPdf = async (data) => {
-      // console.log(data);
-      // const result = data.map(({type,index,...rest}) => ({...rest}));
-      // try {
-      //   const resp = await apiService.post("", {
-      //     operation: "export_pdfs",
-      //   });
-      // } catch (error) {
-      //   console.log(error);
-      // }
-    };
     return (
       <div className="flex gap-3 items-center justify-center">
-        <input type="date" className="form-control" />
-        <button className="btn shrink-0" onClick={() => exportPdf(data)}>
-          Bulk PDF
-        </button>
         <button className="btn shrink-0" onClick={() => exportToXlsx(data)}>
           Download XLSX
         </button>
@@ -140,4 +124,4 @@ const Master = () => {
     </div>
   );
 };
-export default Master;
+export default Admin;
