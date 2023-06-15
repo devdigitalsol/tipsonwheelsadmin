@@ -4,8 +4,9 @@ import { AppContext } from "../context";
 import moment from "moment";
 import * as XLSX from "xlsx";
 import { apiService } from "../services";
-
+import { useNavigate } from "react-router-dom";
 const Master = () => {
+  const navigate = useNavigate();
   const { doctors, fetchDoctors, user } = useContext(AppContext);
   const [data, setData] = useState([]);
   useEffect(() => {
@@ -105,15 +106,23 @@ const Master = () => {
       return false;
     };
     const exportPdf = async (data) => {
-      // console.log(data);
-      // const result = data.map(({type,index,...rest}) => ({...rest}));
-      // try {
-      //   const resp = await apiService.post("", {
-      //     operation: "export_pdfs",
-      //   });
-      // } catch (error) {
-      //   console.log(error);
-      // }
+      const result = data.map(({ doctor_code, pdf_path }) => ({
+        doctor_code,
+        pdf_path,
+      }));
+      try {
+        const resp = await apiService.post("", {
+          operation: "export_pdfs",
+          pdf_data: result,
+        });
+        if (resp.data?.status === 200) {
+          // navigate(resp.data?.zip_path);
+          window.open(resp.data?.zip_path, "_blank");
+        }
+        console.log(resp);
+      } catch (error) {
+        console.log(error);
+      }
     };
     return (
       <div className="flex gap-3 items-center justify-center">
