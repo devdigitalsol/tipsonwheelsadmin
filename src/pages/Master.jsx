@@ -5,6 +5,7 @@ import moment from "moment";
 import * as XLSX from "xlsx";
 import { apiService } from "../services";
 import { useNavigate } from "react-router-dom";
+import parse from "html-react-parser";
 const Master = () => {
   const navigate = useNavigate();
   const { doctors, fetchDoctors, user } = useContext(AppContext);
@@ -76,7 +77,7 @@ const Master = () => {
       filterable: true,
     },
     {
-      name: "Date Of Distribution",
+      name: <Tilte title={`Date of Distribution<br/>DD/MM/YYYY`} />,
       selector: (state) => state.train_date,
       width: "160px",
       cell: (state) => {
@@ -92,7 +93,7 @@ const Master = () => {
       const strToNum = Number(str);
       const numToStr = strToNum.toString();
       return moment(numToStr.substring(0, numToStr.length - 6)).format(
-        "MM/DD/YYYY"
+        "DD/MM/YYYY"
       );
     }
   };
@@ -136,6 +137,7 @@ const Master = () => {
       </div>
     );
   });
+
   return (
     <div className="card shadow !p-0">
       <DataTable
@@ -150,3 +152,6 @@ const Master = () => {
   );
 };
 export default Master;
+export const Tilte = ({ title }) => {
+  return <div>{parse(title)}</div>;
+};
