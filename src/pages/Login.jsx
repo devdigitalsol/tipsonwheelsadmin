@@ -8,8 +8,8 @@ const Login = () => {
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
   const [userInfo, setUserInfo] = useState({
-    email: "verifier_one@solmc.in",
-    password: "irctc",
+    email: "",
+    password: "",
   });
   const cansave = [
     userInfo.email?.trim().length,
