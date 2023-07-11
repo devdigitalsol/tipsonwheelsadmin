@@ -7,9 +7,17 @@ import { apiService } from "../services";
 import { useNavigate } from "react-router-dom";
 import parse from "html-react-parser";
 const Master = () => {
+  const newtoday = moment(new Date()).format("DD-MM-YYYY");
+
   const navigate = useNavigate();
   const { doctors, fetchDoctors, user } = useContext(AppContext);
   const [data, setData] = useState([]);
+  const [selectDate, setSelectDate] = useState("");
+
+  const datehandleChange = (e) => {
+    setSelectDate(e.target.value);
+  };
+
   useEffect(() => {
     if (doctors?.length > 0) {
       const filteredData = doctors.filter((item) => {
@@ -25,6 +33,11 @@ const Master = () => {
   useEffect(() => {
     fetchDoctors();
   }, []);
+
+  const clearData = () => {
+    setSelectDate("");
+    console.log("Clear date");
+  };
 
   const columns = useCallback([
     {
@@ -102,12 +115,25 @@ const Master = () => {
     const exportToXlsx = (data) => {
       let wb = XLSX.utils.book_new();
       let ws1 = XLSX.utils.json_to_sheet(data);
-      XLSX.utils.book_append_sheet(wb, ws1, "React Table Data");
-      XLSX.writeFile(wb, `test.xlsx`);
+      XLSX.utils.book_append_sheet(wb, ws1, "Doctors");
+      XLSX.writeFile(wb, `${newtoday}-master.xlsx`);
       return false;
     };
     const exportPdf = async (data) => {
-      const result = data.map(({ doctor_code, pdf_path }) => ({
+      console.log(data, moment(selectDate).format("YYYYMMDD") + "000000");
+      let allResult;
+      if (selectDate) {
+        const filterNewArr = data.filter((element) => {
+          return (
+            element.train_date ===
+            moment(selectDate).format("YYYYMMDD") + "000000"
+          );
+        });
+        allResult = filterNewArr;
+      } else {
+        allResult = data;
+      }
+      const result = allResult.map(({ doctor_code, pdf_path }) => ({
         doctor_code,
         pdf_path,
       }));
@@ -117,7 +143,6 @@ const Master = () => {
           pdf_data: result,
         });
         if (resp.data?.status === 200) {
-          // navigate(resp.data?.zip_path);
           window.open(resp.data?.zip_path, "_blank");
         }
         console.log(resp);
@@ -126,11 +151,21 @@ const Master = () => {
       }
     };
     return (
-      <div className="flex gap-3 items-center justify-center">
-        <input type="date" className="form-control" />
-        <button className="btn shrink-0" onClick={() => exportPdf(data)}>
-          Bulk PDF
-        </button>
+      <div className="flex gap-6 items-center justify-center">
+        <div className="flex gap-2 items-center justify-center">
+          <input
+            type="date"
+            className="form-control"
+            value={selectDate}
+            onChange={datehandleChange}
+          />
+          <button className="btn shrink-0" onClick={() => exportPdf(data)}>
+            Bulk PDF
+          </button>
+          <button className="btn !bg-gray-400 shrink-0" onClick={clearData}>
+            Clear
+          </button>
+        </div>
         <button className="btn shrink-0" onClick={() => exportToXlsx(data)}>
           Download XLSX
         </button>

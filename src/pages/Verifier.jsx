@@ -111,6 +111,16 @@ const Verifier = () => {
       },
     },
     {
+      name: "Status",
+      selector: (state) => state.status,
+      sortable: true,
+      filterable: true,
+      // width: "70px",
+      cell: (state) => {
+        return <div className="uppercase">{state.status}</div>;
+      },
+    },
+    {
       name: "IMG",
       selector: (state) => state.media_path,
       width: "70px",
@@ -224,8 +234,8 @@ const Verifier = () => {
       state.city_region.trim().length,
       state.state.trim().length,
       state.hq.trim().length,
-      state.train_date.trim().length,
-      state.train_number.trim().length,
+      state.train_date,
+      state.train_number,
     ].every(Boolean);
     if (!canchange && changedStatus === "approved") {
       toast.error("Please enter all the required fileds");
