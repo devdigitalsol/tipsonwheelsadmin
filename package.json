@@ -3,10 +3,10 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "/tipsonwheels/admin",
+  "homepage": "/admin",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --base=/tipsonwheels/admin/",
+    "build": "vite build --base=/admin/",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
