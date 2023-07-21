@@ -275,33 +275,33 @@ const Verifier = () => {
     const doc = new jsPDF({
       orientation: "portrait",
       unit: "in",
-      format: "a3",
+      format: "a5",
     });
-    doc.addImage(PDFBG, "png", 0, 0, 11.7, 16.5);
+    doc.addImage(PDFBG, "png", 0, 0, 5.8, 8.3);
     tips.map((tip, i) => {
       doc.setFont("helvetica", "", "normal");
-      doc.setFontSize(26);
+      doc.setFontSize(15);
       doc.setTextColor(40, 40, 40);
-      doc.addImage(tip.icon, "png", 1.3, 1.53 * i + 3.8, 1, 1);
-      doc.text(tip.text, 2.8, 1.52 * i + 4.2, { maxWidth: 7.5 });
+      doc.addImage(tip.icon, "png", 0.62, 0.757 * i + 1.88, 0.58, 0.58);
+      doc.text(tip.text, 1.5, 0.76 * i + 2.1, { maxWidth: 3.6 });
     });
-    doc.setFontSize(40);
+    doc.setFontSize(18);
     doc.setFont("helvetica", "", "bold");
     doc.setTextColor(255, 255, 255);
-    doc.text(state?.doctor_name, doc.internal.pageSize.getWidth() / 2, 12.5, {
+    doc.text(state?.doctor_name, doc.internal.pageSize.getWidth() / 2, 6.3, {
       align: "center",
     });
-    doc.setFontSize(30);
+    doc.setFontSize(14);
     doc.setFont("helvetica", "", "bold");
-    doc.text(state?.speciality, doc.internal.pageSize.getWidth() / 2, 13, {
+    doc.text(state?.speciality, doc.internal.pageSize.getWidth() / 2, 6.55, {
       align: "center",
     });
-    doc.setFontSize(30);
+    doc.setFontSize(12);
     doc.setFont("helvetica", "", "normal");
     doc.text(
       `${state?.city_region}, ${state?.state}`,
       doc.internal.pageSize.getWidth() / 2,
-      13.5,
+      6.75,
       {
         align: "center",
       }
