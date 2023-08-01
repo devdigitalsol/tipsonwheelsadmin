@@ -12,8 +12,6 @@ import { tipsoptions } from "../utils/tipsoptions";
 const statusArray = {
   pending: "Pending",
   approved: "Approved",
-  "rejected-1": "Image is not appropriate",
-  "rejected-2": "Entered data is not appropriate",
 };
 const today = new Date();
 const tomorrow = new Date(today);
@@ -120,18 +118,18 @@ const Verifier = () => {
         return <div className="uppercase">{state.status}</div>;
       },
     },
-    {
-      name: "IMG",
-      selector: (state) => state.media_path,
-      width: "70px",
-      cell: (state) => {
-        return (
-          <a href={state.media_path} data-fancybox>
-            <img src={state.media_path} alt={state.doctor_name} width={40} />
-          </a>
-        );
-      },
-    },
+    // {
+    //   name: "IMG",
+    //   selector: (state) => state.media_path,
+    //   width: "70px",
+    //   cell: (state) => {
+    //     return (
+    //       <a href={state.media_path} data-fancybox>
+    //         <img src={state.media_path} alt={state.doctor_name} width={40} />
+    //       </a>
+    //     );
+    //   },
+    // },
     {
       name: "Action",
       cell: (state) => {
