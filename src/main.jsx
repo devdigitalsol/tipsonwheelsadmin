@@ -7,7 +7,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <BrowserRouter basename="/admin">
+  <BrowserRouter basename="/tipsonwheels/admin">
     <AppState>
       <Routes>
         <Route path="/*" element={<App />} />
