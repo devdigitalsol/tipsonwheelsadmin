@@ -16,7 +16,9 @@ const App = () => {
           <Route path="unauthorized" element={<Unauthorized />} />
           <Route
             element={
-              <ProtectedRoute alloweRoles={["master", "verifier", "admin"]} />
+              <ProtectedRoute
+                alloweRoles={["master", "verifier", "admin", "scientimed"]}
+              />
             }
           >
             <Route index element={<Home />} />

@@ -3,6 +3,7 @@ import { AppContext } from "../context";
 import Admin from "./Admin";
 import Verifier from "./Verifier";
 import Master from "./Master";
+import Scientimed from "./Scientimed";
 
 const Home = () => {
   const { user } = useContext(AppContext);
@@ -14,6 +15,9 @@ const Home = () => {
   }
   if (user?.role === "master") {
     return <Master />;
+  }
+  if (user?.role === "scientimed") {
+    return <Scientimed />;
   }
 };
 export default Home;

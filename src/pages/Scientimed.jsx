@@ -7,6 +7,7 @@ import { apiService } from "../services";
 import moment from "moment";
 import { jsPDF } from "jspdf";
 import slugify from "slugify";
+import "./app.css";
 import PDFBG from "./../assets/images/tipbg.png";
 import { tipsoptions } from "../utils/tipsoptions";
 const statusArray = {
@@ -16,7 +17,7 @@ const statusArray = {
 const today = new Date();
 const tomorrow = new Date(today);
 tomorrow.setDate(tomorrow.getDate() + 1);
-const Verifier = () => {
+const Scientimed = () => {
   const { doctors, fetchDoctors, user } = useContext(AppContext);
   const [data, setData] = useState([]);
   useEffect(() => {
@@ -88,46 +89,33 @@ const Verifier = () => {
         return InputComponent("hq", state);
       },
     },
-    // {
-    //   name: "Train No.",
-    //   width: "100px",
-    //   selector: (state) => state.train_number,
-    //   sortable: true,
-    //   filterable: true,
-    //   cell: (state) => {
-    //     return InputComponent("train_number", state);
-    //   },
-    // },
-    // {
-    //   name: "Date Of Distribution",
-    //   selector: (state) => state.train_date,
-    //   width: "160px",
-    //   sortable: true,
-    //   filterable: true,
-    //   cell: (state) => {
-    //     return InputComponent("train_date", state);
-    //   },
-    // },
     {
-      name: "Status",
-      selector: (state) => state.status,
+      name: "Train No.",
+      width: "100px",
+      selector: (state) => state.train_number,
       sortable: true,
       filterable: true,
-      // width: "70px",
       cell: (state) => {
-        return <div className="uppercase">{state.status}</div>;
+        return InputComponent("train_number", state);
+      },
+    },
+    {
+      name: "Date Of Distribution",
+      selector: (state) => state.train_date,
+      width: "160px",
+      sortable: true,
+      filterable: true,
+      cell: (state) => {
+        return InputComponent("train_date", state);
       },
     },
     // {
-    //   name: "IMG",
-    //   selector: (state) => state.media_path,
-    //   width: "70px",
+    //   name: "Status",
+    //   selector: (state) => state.status,
+    //   sortable: true,
+    //   filterable: true,
     //   cell: (state) => {
-    //     return (
-    //       <a href={state.media_path} data-fancybox>
-    //         <img src={state.media_path} alt={state.doctor_name} width={40} />
-    //       </a>
-    //     );
+    //     return <div className="uppercase">{state.status}</div>;
     //   },
     // },
     {
@@ -163,7 +151,6 @@ const Verifier = () => {
       },
     },
   ]);
-
   const InputComponent = (name, state) => {
     const handleChange = (e, doctor_code) => {
       const { name, value } = e.target;
@@ -181,17 +168,32 @@ const Verifier = () => {
       });
       setData(editData);
     };
-    return (
-      <>
-        {name === "train_date" ? (
-          <DateInput name={name} state={state} handleChange={handleChange} />
-        ) : (
-          <TextInput name={name} state={state} handleChange={handleChange} />
-        )}
-      </>
-    );
-  };
 
+    if (
+      name === "train_number" ||
+      (name === "train_date" && state.status !== "approved")
+    ) {
+      return (
+        <>
+          {name === "train_date" ? (
+            <DateInput name={name} state={state} handleChange={handleChange} />
+          ) : (
+            <TextInput name={name} state={state} handleChange={handleChange} />
+          )}
+        </>
+      );
+    } else if (name === "train_date" && state.status === "approved") {
+      // Format the date as "DD-MM-YYYY" when status is approved
+      return (
+        <div className="non-editable-text">
+          {moment(state[name], "YYYYMMDDHHmmss").format("DD-MM-YYYY")}
+        </div>
+      );
+    } else {
+      // Render non-editable text for other fields
+      return <div className="non-editable-text">{state[name]}</div>;
+    }
+  };
   const saveData = async (state, changedStatus, pdf_path) => {
     if (
       !state.doctor_code.trim().length ||
@@ -357,16 +359,17 @@ export const DateInput = ({ name, state, handleChange }) => {
           ? moment(newstr).format("YYYY-MM-DD")
           : moment(tomorrow).format("YYYY-MM-DD")
       }
-      disabled={state.status === "approved"}
+      // disabled={state.status === "approved"}
       onChange={(e) => handleChange(e, state.doctor_code)}
       min={tomorrow.toISOString().split("T")[0]}
     />
   );
 };
 export const TextInput = ({ name, state, handleChange }) => {
+  const isApproved = state.status === "approved";
   return (
     <input
-      className="input-table"
+      className={`input-table ${isApproved ? "borderless-input" : ""}`}
       type="text"
       name={name}
       value={state[name] || ""}
@@ -375,4 +378,4 @@ export const TextInput = ({ name, state, handleChange }) => {
     />
   );
 };
-export default Verifier;
+export default Scientimed;

@@ -6,6 +6,7 @@ const AddTM = () => {
   const { createTm, allHq } = useContext(AppContext);
   const [tmInfo, setTmInfo] = useState({
     tm_id: "",
+    old_tm_id: "",
     tm_name: "",
     l1_name: "",
     l2_name: "",
@@ -15,6 +16,7 @@ const AddTM = () => {
   });
   const canSave = [
     tmInfo?.tm_id?.trim().length,
+    tmInfo?.old_tm_id?.trim().length,
     tmInfo?.tm_name?.trim().length,
     tmInfo?.l1_name?.trim().length,
     tmInfo?.l2_name?.trim().length,
@@ -44,6 +46,17 @@ const AddTM = () => {
           id="tm_id"
           className="form-control"
           onChange={(e) => setTmInfo({ ...tmInfo, tm_id: e.target.value })}
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="old_tm_id" className="form-label">
+          Old TM ID
+        </label>
+        <input
+          type="text"
+          id="old_tm_id"
+          className="form-control"
+          onChange={(e) => setTmInfo({ ...tmInfo, old_tm_id: e.target.value })}
         />
       </div>
       <div className="form-group">

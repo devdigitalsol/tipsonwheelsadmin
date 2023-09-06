@@ -51,6 +51,13 @@ export const AppState = ({ children }) => {
           );
           setUser({ role: "admin", email, password });
         }
+        if (resp?.data?.role === "scientimed") {
+          localStorage.setItem(
+            "admin",
+            JSON.stringify({ role: "scientimed", email, password })
+          );
+          setUser({ role: "scientimed", email, password });
+        }
         setIsLoading(false);
         return true;
       }
