@@ -109,19 +109,53 @@ export const AppState = ({ children }) => {
       fetchHqs();
     }
   }, [user]);
+
   const createTm = async (tmInfo) => {
     setIsLoading(true);
+
     try {
-      const resp = await apiService.post("", {
-        ...tmInfo,
-        operation: "create_tm",
-      });
-      if (resp?.data?.status === 200) {
-        toast.success("TM created successfully");
+      // Check if old_tm_id exists
+      if (tmInfo.old_tm_id) {
+        // Make a request to the authentication API
+        const authResp = await apiService.post("", {
+          operation: "authenticate",
+          tm_id: tmInfo.old_tm_id,
+          show_tips_details: true,
+        });
+
+        if (authResp?.data?.status === 200) {
+          // Authentication successful, proceed with create_tm
+          const createResp = await apiService.post("", {
+            ...tmInfo,
+            operation: "create_tm",
+          });
+
+          if (createResp?.data?.status === 200) {
+            // console.log("Exist and create");
+            toast.success("TM created successfully");
+          } else {
+            toast.error("Failed to create TM");
+          }
+        } else {
+          // Authentication failed, show an error message
+          toast.error(authResp?.data?.message);
+        }
+      } else {
+        // old_tm_id is not provided, proceed with create_tm
+        const resp = await apiService.post("", {
+          ...tmInfo,
+          operation: "create_tm",
+        });
+
+        if (resp?.data?.status === 200) {
+          toast.success("TM created successfully");
+        } else if (resp?.data?.status === 404) {
+          toast.error(resp?.data?.message);
+        } else {
+          toast.error("Failed to create TM");
+        }
       }
-      if (resp?.data?.status === 404) {
-        toast.error(resp?.data?.message);
-      }
+
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);

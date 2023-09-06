@@ -35,7 +35,7 @@ const Layout = () => {
           <div className="flex gap-2">
             <NavLink to="/">Dashboard</NavLink>
             {user?.role === "admin" && (
-              <NavLink to="/add-tm">Add New TM</NavLink>
+              <NavLink to="/add-tm">Updated TM</NavLink>
             )}
           </div>
           <div className="text-slate-600">

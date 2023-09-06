@@ -16,7 +16,7 @@ const AddTM = () => {
   });
   const canSave = [
     tmInfo?.tm_id?.trim().length,
-    tmInfo?.old_tm_id?.trim().length,
+    // tmInfo?.old_tm_id?.trim().length,
     tmInfo?.tm_name?.trim().length,
     tmInfo?.l1_name?.trim().length,
     tmInfo?.l2_name?.trim().length,
