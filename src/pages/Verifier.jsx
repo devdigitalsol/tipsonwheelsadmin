@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+} from "react";
 import DataTable from "react-data-table-component-with-filter";
 import { AppContext } from "../context";
 import Fancybox from "../components/Fancybox";
@@ -9,6 +15,7 @@ import { jsPDF } from "jspdf";
 import slugify from "slugify";
 import PDFBG from "./../assets/images/tipbg.png";
 import { tipsoptions } from "../utils/tipsoptions";
+import * as XLSX from "xlsx";
 const statusArray = {
   pending: "Pending",
   approved: "Approved",
@@ -329,6 +336,23 @@ const Verifier = () => {
     }
   };
 
+  const actionExport = useMemo(() => {
+    const exportToXlsx = (data) => {
+      let wb = XLSX.utils.book_new();
+      let ws1 = XLSX.utils.json_to_sheet(data);
+      XLSX.utils.book_append_sheet(wb, ws1, "React Table Data");
+      XLSX.writeFile(wb, `test.xlsx`);
+      return false;
+    };
+    return (
+      <div className="flex gap-3 items-center justify-center">
+        <button className="btn shrink-0" onClick={() => exportToXlsx(data)}>
+          Download XLSX
+        </button>
+      </div>
+    );
+  });
+
   return (
     <div className="card shadow !p-0">
       <Fancybox>
@@ -338,6 +362,7 @@ const Verifier = () => {
           columns={columns}
           data={data}
           persistTableHead
+          actions={actionExport}
         />
       </Fancybox>
     </div>
