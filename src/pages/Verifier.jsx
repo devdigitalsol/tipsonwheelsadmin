@@ -340,6 +340,9 @@ const Verifier = () => {
     const exportToXlsx = (data) => {
       let wb = XLSX.utils.book_new();
       let ws1 = XLSX.utils.json_to_sheet(data);
+      ws1["!cols"] = [];
+      ws1["!cols"][13] = { hidden: true };
+      ws1["!cols"][14] = { hidden: true };
       XLSX.utils.book_append_sheet(wb, ws1, "React Table Data");
       XLSX.writeFile(wb, `test.xlsx`);
       return false;
