@@ -239,8 +239,8 @@ const Verifier = () => {
       state.city_region.trim().length,
       state.state.trim().length,
       state.hq.trim().length,
-      state.train_date,
-      state.train_number,
+      // state.train_date,
+      // state.train_number,
     ].every(Boolean);
     if (!canchange && changedStatus === "approved") {
       toast.error("Please enter all the required fileds");
@@ -341,8 +341,8 @@ const Verifier = () => {
       let wb = XLSX.utils.book_new();
       let ws1 = XLSX.utils.json_to_sheet(data);
       ws1["!cols"] = [];
-      ws1["!cols"][13] = { hidden: true };
-      ws1["!cols"][14] = { hidden: true };
+      ws1["!cols"][12] = { hidden: true };
+      ws1["!cols"][16] = { hidden: true };
       XLSX.utils.book_append_sheet(wb, ws1, "React Table Data");
       XLSX.writeFile(wb, `test.xlsx`);
       return false;
