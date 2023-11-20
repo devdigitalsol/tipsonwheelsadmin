@@ -171,6 +171,14 @@ const Verifier = () => {
     },
   ]);
 
+  function titleCase(value) {
+    let str = value.toLowerCase().split(" ");
+    for (let i = 0; i < str.length; i++) {
+      str[i] = str[i].charAt(0).toUpperCase() + str[i].substring(1);
+    }
+    return str.join(" ");
+  }
+
   const InputComponent = (name, state) => {
     const handleChange = (e, doctor_code) => {
       const { name, value } = e.target;
@@ -219,6 +227,7 @@ const Verifier = () => {
         pdf_path: pdf_path || state.pdf_path,
       });
       if (resp?.data?.status === 200) {
+        console.log("Response ok", resp.data);
         const updatedData = data.map((item) => {
           return item.doctor_code === state.doctor_code
             ? { ...resp?.data?.doctor, sr: state.sr }
@@ -293,20 +302,30 @@ const Verifier = () => {
     doc.setFontSize(18);
     doc.setFont("helvetica", "", "bold");
     doc.setTextColor(255, 255, 255);
-    doc.text(state?.doctor_name, doc.internal.pageSize.getWidth() / 2, 6.3, {
-      align: "center",
-    });
+    doc.text(
+      "Dr. " + titleCase(value?.doctor_name),
+      doc.internal.pageSize.getWidth() / 2,
+      6.2,
+      {
+        align: "center",
+      }
+    );
     doc.setFontSize(14);
     doc.setFont("helvetica", "", "bold");
-    doc.text(state?.speciality, doc.internal.pageSize.getWidth() / 2, 6.55, {
-      align: "center",
-    });
+    doc.text(
+      titleCase(value?.speciality),
+      doc.internal.pageSize.getWidth() / 2,
+      6.45,
+      {
+        align: "center",
+      }
+    );
     doc.setFontSize(12);
     doc.setFont("helvetica", "", "normal");
     doc.text(
-      `${state?.city_region}, ${state?.state}`,
+      `${titleCase(value?.city_region)}, ${titleCase(value?.state)}`,
       doc.internal.pageSize.getWidth() / 2,
-      6.75,
+      6.65,
       {
         align: "center",
       }
