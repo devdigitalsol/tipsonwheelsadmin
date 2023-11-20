@@ -303,7 +303,7 @@ const Verifier = () => {
     doc.setFont("helvetica", "", "bold");
     doc.setTextColor(255, 255, 255);
     doc.text(
-      "Dr. " + titleCase(value?.doctor_name),
+      "Dr. " + titleCase(state?.doctor_name),
       doc.internal.pageSize.getWidth() / 2,
       6.2,
       {
@@ -313,7 +313,7 @@ const Verifier = () => {
     doc.setFontSize(14);
     doc.setFont("helvetica", "", "bold");
     doc.text(
-      titleCase(value?.speciality),
+      titleCase(state?.speciality),
       doc.internal.pageSize.getWidth() / 2,
       6.45,
       {
@@ -323,7 +323,7 @@ const Verifier = () => {
     doc.setFontSize(12);
     doc.setFont("helvetica", "", "normal");
     doc.text(
-      `${titleCase(value?.city_region)}, ${titleCase(value?.state)}`,
+      `${titleCase(state?.city_region)}, ${titleCase(state?.state)}`,
       doc.internal.pageSize.getWidth() / 2,
       6.65,
       {
